@@ -13,10 +13,10 @@ if __name__ == '__main__':
         cmd = input("User command: ")
 
         if cmd[0] == 'S' or cmd[0] == 'D':
-            finger1.sendToArduino(cmd)
+            finger1.sendCommand(cmd)
 
         elif cmd[0] == 'T':
-            finger2.sendToArduino(cmd)
+            finger2.sendCommand(cmd)
 
         else:
             print("Invalid command")

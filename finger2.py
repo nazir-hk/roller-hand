@@ -20,9 +20,9 @@ def setupSerial(baudRate, serialPortName):
     time.sleep(3)
 
 
-def sendToArduino(stringToSend):
+def sendCommand(stringToSend):
     
-        # this adds the start- and end-markers before sending
+    # this adds the start- and end-markers before sending
     global startMarker, endMarker, serialPort
     
     stringWithMarkers = (startMarker)
@@ -30,32 +30,6 @@ def sendToArduino(stringToSend):
     stringWithMarkers += (endMarker)
 
     serialPort.write(stringWithMarkers.encode()) # encode needed for Python3
-
-
-
-def recvLikeArduino():
-
-    global startMarker, endMarker, serialPort, dataStarted, dataBuf, messageComplete
-
-    if serialPort.inWaiting() > 0 and messageComplete == False:
-        x = serialPort.read().decode("utf-8") # decode needed for Python3
-        
-        if dataStarted == True:
-            if x != endMarker:
-                dataBuf = dataBuf + x
-            else:
-                dataStarted = False
-                messageComplete = True
-        elif x == startMarker:
-            dataBuf = ''
-            dataStarted = True
-    
-    if (messageComplete == True):
-        messageComplete = False
-        return dataBuf
-    else:
-        return "XXX" 
-
 
 
 if __name__ == '__main__':
@@ -66,7 +40,7 @@ if __name__ == '__main__':
 
         cmd = input("User command: ")
 
-        sendToArduino(cmd)
+        sendCommand(cmd)
 
         time.sleep(0.5)
 
