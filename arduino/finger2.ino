@@ -25,6 +25,9 @@ float target_position = 0.0;
 Commander command = Commander(Serial);
 void doTarget(char* cmd) { command.scalar(&target_position, cmd); }
 
+float target_stiffness = 250.0;
+void doTargetS(char* cmd) { command.scalar(&target_stiffness, cmd); }
+
 void setup() {
   I2Cone.begin(19,18, 400000UL); 
   sensor.init(&I2Cone);
@@ -48,7 +51,7 @@ void setup() {
   motor.PID_velocity.I = 0.5;
 
   //角度P环设置 
-  // motor.P_angle.P = 20; //low stiffness
+  // motor.P_angle.P = 5; //low stiffness
   motor.P_angle.P = 250; //high stiffness
 
   //最大电机限制电机
@@ -70,6 +73,8 @@ void setup() {
   motor.initFOC();
   command.add('T', doTarget, "target position");
 
+  command.add('S', doTargetS, "target stiffness");
+
   // Serial.println(F("Motor ready."));
   // Serial.println(F("Set the target position using serial terminal:"));
   
@@ -82,6 +87,8 @@ void loop() {
   // Serial.print(sensor.getAngle()); 
   // Serial.println();
   motor.loopFOC();
+
+  motor.P_angle.P = target_stiffness;
 
   motor.move(target_position);
 
